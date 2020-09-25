@@ -1,0 +1,62 @@
+-------------------------------------------------------------------
+======================= QUICK-START GUIDE =========================
+-------------------------------------------------------------------
+
+To generate a labyrinth, simply create an empty GameObject, add the
+Labyrinth_Manager component and pass a simple cube prefab to the
+Floor Prefab and Wall Prefab serialized fields. Then, either run the 
+game, or in the inspector, click: 
+			"Generate Labyrinth"
+The labyrinth will always generate at 0,0,0, unless it has a parent.
+
+
+-------------------------------------------------------------------
+======================== LABYRINTH_MANAGER ========================
+-------------------------------------------------------------------
+
+Labyrinth_Manager is a basic wrapper for the Labyrinth object, which allows
+you to set up all of the fields for the labyrinth, as well as adding it as
+a component to generate either in EditMode or during play.
+
+SO_Labyrinth_Manager is a slightly different wrapper, which defers data
+storage and editing to Scriptable Objects of type LabyrinthSO. This is
+practical for situations where you know you want several different
+labyrinths, as it allows you to define the labyrinth generation parameters
+as assets, without having to store the labyrinths as prefabs. You should 
+set all your LabyrinthSO assets in the serialized collection.
+When generating labyrinths at runtime with SO_Labyrinth_Manager, you should
+get the SO_Labyrinth from the manager's collection:
+			SO_Labyrinth_Manager.Labyrinths
+Then pass the SO_Labyrinth to generate to the manager's GenerateLabyrinth 
+method.
+LabyrinthSOs can be created by right-clicking in your assets folder:
+			"Create -> Labyrinth Maker 8000 -> Labyrinth"
+
+-------------------------------------------------------------------
+==================== CREATING A CUSTOM MANAGER ====================
+-------------------------------------------------------------------
+
+Feel free to write your own Labyrinth Managers if you need to extend
+the functionality.
+When making a custom manager, it needs to inherit from Labyrinth_Manager_Base 
+or SO_Labyrinth_Manager_Base respectively. This allows the editor 
+extension for generating in EditMode to be accessible on your custom 
+manager.
+It also will need instances of the non-mono-behaviour classes: 
+	Labyrinth_Grapher, Labyrinth_Builder and Labyrinth_DFS.
+These should be instantiated in the narrowest scope possible, e.g. a
+method, so the garbage collector can clean them up after use.
+The relevant methods are GraphFloor, BuildLabyrinth and DepthFirstSearch
+respectively. Intended parameters can be found in the Labyrinth object.
+
+-------------------------------------------------------------------
+============================ SAFE MODE ============================
+-------------------------------------------------------------------
+
+SafeMode is a boolean which prevents you from generating labyrinths
+that exceed 8000 nodes. This is because the algorithm is recursive and can 
+throw Stack Overflow Exceptions at 10000 nodes and above.
+SafeMode also prevents you from generating labyrinths where the Scale is not
+divisible by the Cell Size with a remainder of 0, as that will cause walls
+inside the labyrinth to clip outside, and potentially make the path too
+narrow to use.

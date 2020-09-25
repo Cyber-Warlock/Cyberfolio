@@ -1,0 +1,1 @@
+Where the Labyrinth Maker idea started. Made for a short two-week project by another student and me.

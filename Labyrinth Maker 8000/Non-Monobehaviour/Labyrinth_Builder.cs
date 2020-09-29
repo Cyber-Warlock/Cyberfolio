@@ -27,8 +27,8 @@ public class Labyrinth_Builder
         if (l.generateFloorAsTiles)
         {
             // Scale prefab once
-            l.floor.transform.localScale = l.floorIsPlane ? new Vector3(l.cellSize / PLANE_DESCALE, l.cellSize / PLANE_DESCALE, l.cellSize / PLANE_DESCALE) :
-                                                                new Vector3(l.cellSize, wallThickness, l.cellSize);
+            l.floor.transform.localScale = l.floorIsPlane ? new Vector3(l.cellSize, l.cellSize, l.cellSize) / PLANE_DESCALE :
+                                                            new Vector3(l.cellSize, wallThickness, l.cellSize);
 
             // If there is a roof, scale it once
             if (l.roof != null)
@@ -40,16 +40,18 @@ public class Labyrinth_Builder
                 GameObject floor = Object.Instantiate(l.floor, node.CellCenter, Quaternion.identity, labyrinth.transform);
                 node.Floor = floor;
 
-                // If a roof should be generated, make the tiles concurrently, reusing floor if there is no roof
                 if (l.generateRoof)
-                    GenerateRoof(l.roof == null ? floor : l.roof, node.CellCenter);
+                    GenerateRoof(l.roof, node.CellCenter);
             }
         }
         else
         {
-            // Scale prefab so scale is carried to roof
-            l.floor.transform.localScale = !l.floorIsPlane ? new Vector3(l.graphScale.x, wallThickness, l.graphScale.z) :
-                 new Vector3(l.graphScale.x / PLANE_DESCALE, l.cellSize / PLANE_DESCALE, l.graphScale.z / PLANE_DESCALE);
+            // Scale prefab once
+            l.floor.transform.localScale = l.floorIsPlane ? l.graphScale / PLANE_DESCALE : new Vector3(l.graphScale.x, wallThickness, l.graphScale.z);
+
+            // If there is a roof, scale it once
+            if (l.roof != null)
+                l.roof.transform.localScale = new Vector3(l.graphScale.x + wallThickness, wallThickness, l.graphScale.z + wallThickness);
 
             labyrinth = Object.Instantiate(l.floor);
 

@@ -84,7 +84,7 @@ public class SO_Labyrinth_Manager : SO_Labyrinth_Manager_Base
 
         Labyrinth_Grapher grapher = new Labyrinth_Grapher();
         l.Labyrinth.Graph = grapher.GraphFloor(l.Labyrinth, l.Seed);
-        if (!(l.Labyrinth.Graph.Nodes.Count > 0))
+        if (l.Labyrinth.Graph.Nodes.Count < 1)
         {
             Debug.LogError("No vertices were created in the graph. Please check your generation settings. Stopping labyrinth generation.");
             return;
